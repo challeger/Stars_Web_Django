@@ -9,6 +9,7 @@
 - **django**  # 开发框架
 - **django-cors-headers**  # 解决跨域问题
 - **mysql, mysqlclient**  # 连接mysql数据库
+- **django-shortuuidfield**  # 自动生成用户的uid
 
 本项目将会采用两种开发方式,分别是
 
