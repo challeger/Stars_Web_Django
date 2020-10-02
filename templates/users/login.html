@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}登录&注册{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div class="content">
+        <form class="form sign-in" id="login_form">
+            <h2>欢迎回来</h2>
+            <label>
+                <span>用户名 | 邮箱</span>
+                <input type="text" name="username"/>
+            </label>
+            <label>
+                <span>密码</span>
+                <input type="password" name="password" />
+            </label>
+            <p class="forgot-pass"><a href="javascript:">忘记密码？</a></p>
+            <button class="set_1_btn Vbtn-1 submit" onclick="login_click()" type="button">
+                <svg>
+                    <rect x="0" y="0" fill="none" width="100%" height="100%"></rect>
+                </svg> 登录
+            </button>
+        </form>
+        <div class="sub-cont">
+            <div class="img">
+                <div class="img__text m--up">
+                    <h2>还未注册？</h2>
+                    <p>立即注册，一起探索星海！</p>
+                </div>
+                <div class="img__text m--in">
+                    <h2>已有帐号？</h2>
+                    <p>好久不见了！</p>
+                </div>
+                <div class="img__btn">
+                    <span class="m--up">注 册</span>
+                    <span class="m--in">登 录</span>
+                </div>
+            </div>
+            <form class="form sign-up" id="register_form">
+                <h2>立即注册</h2>
+                <label>
+                    <span>用户名</span>
+                    <input type="text" name="username" />
+                </label>
+                <label>
+                    <span>邮箱</span>
+                    <input type="email" name="email" id="register_email"/>
+                </label>
+                <label>
+                    <span>验证</span>
+                    <br>
+                    <input type="text" name="check" id="" value="" style="width: 9.375rem; display:inline;" />
+                    <button style="display:inline;" id="check_btn" onclick="check_click(this.id, 60);" type="button">
+                        发送验证码
+                    </button>
+                </label>
+                <label>
+                    <span>密码</span>
+                    <input type="password" name="password"/>
+                </label>
+                <button class="set_1_btn Vbtn-1 submit" onclick="register_click()" type="button">
+                    <svg>
+                        <rect x="0" y="0" fill="none" width="100%" height="100%"></rect>
+                    </svg> 注册
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        document.querySelector('.img__btn').addEventListener('click', function () {
+            document.querySelector('.content').classList.toggle('s--signup')
+        });
+
+        function check_email(email) {
+            let email_reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+            return email_reg.test(email.val());
+        }
+
+        function check_click(obj_id, time) {
+            if (!isNaN(time) && time > 0) {
+                let btn = $('#' + obj_id);
+                let email = $('#register_email');
+                console.log(email.val());
+                if (!check_email(email)) {
+                }
+                else {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/users/email_register_verify/',
+                        contentType: 'application/json', //以json格式传数据
+                        dataType: 'json',
+                        data: JSON.stringify({
+                            "email": email.val()
+                        }),
+                        success: function (data) {
+                            console.log(data);
+                            btn.html("倒计时" + time + "秒");
+                            btn.attr('disabled', true);
+                            let b = setInterval(function () {
+                                time--;
+                                if (time <= 0) {
+                                    btn.html('重新发送');
+                                    btn.attr('disabled', false);
+                                    clearInterval(b);
+                                } else {
+                                    btn.html("倒计时" + time + "秒");
+                                }
+                            }, 1000);
+                        },
+                        error: function (e) {
+                            //这里之后根据错误信息来进行提示
+                            console.log(e);
+                        }
+                    })
+                }
+            } else {
+                alert('时间有误')
+            }
+        }
+
+        function login_click(){
+            let formData = $('#login_form').serializeArray();
+            console.log(formData);
+            // 后期加上数据验证
+            $.ajax({
+                url: "{% url 'Users:login_auth' %}",
+                type: 'POST',
+                contentType: 'application/json', //以json格式传数据
+                dataType: 'json',
+                data: JSON.stringify({
+                    username: formData[0].value,
+                    password: formData[1].value
+                }),
+                success: function (resp) {
+                    console.log(resp);
+                },
+                error: function (e) {
+                    // 后期根据返回的status来进行对应的提示
+                    console.log(e.responseJSON.status);
+                    console.log(e.responseJSON.msg);
+                }
+            })
+        }
+        function register_click(){
+            let formData = $('#register_form').serializeArray();
+            console.log(formData);
+            // 后期加上数据验证
+            $.ajax({
+                url: "{% url 'Users:register' %}",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    username: formData[0].value,
+                    email: formData[1].value,
+                    check: formData[2].value,
+                    password: formData[3].value
+                }),
+                success: function (resp) {
+                    console.log(resp);
+                },
+                error: function (e) {
+                    // 后期根据返回的status来进行对应的提示
+                    console.log(e.responseJSON.status);
+                    console.log(e.responseJSON.msg);
+                }
+            })
+        }
+    </script>
+{% endblock %}
+

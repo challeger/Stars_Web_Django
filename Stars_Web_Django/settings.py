@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',  # 跨域问题
     'Users',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,13 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',  # 跨域问题
 ]
-
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = True
-# 允许所有的请求头
-CORS_ALLOW_HEADERS = ('*', )
 
 # 设置默认用户
 AUTH_USER_MODEL = 'Users.User'
@@ -52,12 +47,22 @@ AUTH_USER_MODEL = 'Users.User'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# 允许跨站时携带cookie
+CORS_ALLOW_CREDENTIALS = True
+# 允许所有主机访问
+CORS_ORIGIN_ALLOW_ALL = True
+# 允许所有请求方法
+CORS_ALLOW_METHODS = ('*', )
+# 允许所有的请求头
+CORS_ALLOW_HEADERS = ('*', )
 
 ROOT_URLCONF = 'Stars_Web_Django.urls'
 

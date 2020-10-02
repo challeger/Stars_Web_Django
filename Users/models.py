@@ -53,7 +53,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     uid = ShortUUIDField(primary_key=True)  # 用户标识
     username = models.CharField(max_length=15, verbose_name='用户名', unique=True)
     email = models.EmailField('邮箱')
-    avatar = models.ImageField(upload_to=_user_directory_path, blank=True, default='user/avatar/default', verbose_name='头像')
+    avatar = models.ImageField(upload_to=_user_directory_path, blank=True,
+                               default='user/avatar/default', verbose_name='头像')
     nickname = models.CharField(max_length=20, verbose_name='昵称', unique=True, db_index=True)
     gender = models.CharField(max_length=2, choices=Gender.choices, blank=True, default=Gender.SECRET)
     desc = models.CharField(max_length=50, blank=True, default='我们的征途是星辰大海!', verbose_name='个性签名')
@@ -82,3 +83,23 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = verbose_name_plural = '用户'
         db_table = 'model_user'
 
+
+class EmailType(models.TextChoices):
+    REGISTER = '1', '用户注册'
+    PASSWORD = '2', '修改密码'
+
+
+class EmailValid(models.Model):
+    """
+    邮箱验证类,保存 用户注册 与 修改密码时
+    的验证码邮件信息
+    """
+    email_type = models.CharField(max_length=2, choices=EmailType.choices,
+                                  default=EmailType.REGISTER, verbose_name='邮件类别')
+    code = models.CharField(max_length=6, verbose_name='验证码')
+    email_address = models.EmailField(verbose_name='邮箱地址')
+    time = models.DateTimeField(auto_now_add=True, verbose_name='发送时间')
+
+    class Meta:
+        verbose_name = verbose_name_plural = '验证邮件'
+        db_table = 'verify_email'
