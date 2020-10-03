@@ -2,9 +2,13 @@ import datetime
 import os
 import uuid
 
+import jwt
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from shortuuidfield import ShortUUIDField
+
+from Stars_Web_Django.settings import SECRET_KEY
 
 
 class Gender(models.TextChoices):
@@ -78,6 +82,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.nickname
+
+    @property
+    def token(self):
+        token = jwt.encode({
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
+            'iat': datetime.datetime.utcnow(),
+            'data': {
+                'username': self.username
+            }
+        }, SECRET_KEY, algorithm='HS256')
+        return token.decode('utf-8')
 
     class Meta:
         verbose_name = verbose_name_plural = '用户'

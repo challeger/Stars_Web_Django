@@ -3,15 +3,16 @@ import json
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 
 from Stars_Web_Django.settings import EMAIL_FROM
 from Users.models import User, EmailValid, EmailType
 from utils.email import get_random_code, check_email
+from utils.permission import check_login
 
 
 @require_POST
@@ -19,11 +20,18 @@ def login_auth(request):
     data = json.loads(request.body)
     try:
         user = User.objects.get(Q(username=data['username']) | Q(email=data['username']))
+        # 验证密码
+        if not user.check_password(data['password']):
+            return JsonResponse(status=400, data={'status': 2, 'msg': '用户名或密码错误!'})
+        obj = redirect(reverse('Users:login'))
+        obj.set_cookie('Token', user.token, 60*60*24)
+    # 未找到用户
     except User.DoesNotExist:
-        return
+        return JsonResponse(status=400, data={'status': 2, 'msg': '用户名&邮箱未注册!'})
+    # 缺少参数
     except KeyError:
-        pass
-    return redirect(reverse('Users:login'))
+        return JsonResponse(status=400, data={'status': 2, 'msg': '不合法的参数!'})
+    return obj
 
 
 @require_POST
@@ -80,3 +88,9 @@ def email_register_verify(request):
         EmailValid.objects.create(code=code, email_address=email)
     # 成功就返回一个200状态码就行了.
     return JsonResponse(data=resp)
+
+
+@require_GET
+@check_login
+def main(request):
+    return HttpResponse('用户中心')

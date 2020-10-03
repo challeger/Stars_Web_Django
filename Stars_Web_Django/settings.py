@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'Users.middleware.LoginMiddleware',  # 得放在AuthMiddleware后面,不然会被覆盖
 ]
 
 # 允许跨站时携带cookie
