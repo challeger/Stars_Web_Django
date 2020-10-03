@@ -154,7 +154,7 @@ EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 
 EMAIL_HOST_USER = '799613500@qq.com'
-EMAIL_HOST_PASSWORD = 'pqtssodfmxysbcdh'
+EMAIL_HOST_PASSWORD = 'racucmoowjmbbehc'
 EMAIL_FROM = '群星小说网<799613500@qq.com>'
 
 # 验证码过期时间为三十分钟

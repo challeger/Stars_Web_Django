@@ -38,7 +38,8 @@ input, button {
     transition: -webkit-transform 0.6s ease-in-out;
     transition: transform 0.6s ease-in-out;
     transition: transform 0.6s ease-in-out, -webkit-transform 0.6s ease-in-out;
-    padding: 50px 30px 0;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 .sub-cont {

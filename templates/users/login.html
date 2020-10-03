@@ -40,10 +40,13 @@
                 </div>
             </div>
             <form class="form sign-up" id="register_form">
-                <h2>立即注册</h2>
                 <label>
                     <span>用户名</span>
                     <input type="text" name="username" />
+                </label>
+                <label>
+                    <span>昵称</span>
+                    <input type="text" name="nickname" />
                 </label>
                 <label>
                     <span>邮箱</span>
@@ -157,9 +160,10 @@
                 contentType: 'application/json',
                 data: JSON.stringify({
                     username: formData[0].value,
-                    email: formData[1].value,
-                    check: formData[2].value,
-                    password: formData[3].value
+                    nickname: formData[1].value,
+                    email: formData[2].value,
+                    check: formData[3].value,
+                    password: formData[4].value
                 }),
                 success: function (resp) {
                     console.log(resp);
