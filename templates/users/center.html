@@ -299,9 +299,6 @@
                     <div class="col-md-8">
                         <!-- wallet Form -->
                         <form id="user-info-form" class="wallet-form">
-
-                            <div class="messages"></div>
-
                             <div class="row">
                                 <div class="column col-md-12">
                                     <div class="form-group">
@@ -314,8 +311,7 @@
                                     <div class="form-group">
                                         <label style="color: #000; font-weight: bold" for="InputNickname">昵称:</label>
                                         <input class="form-control" name="nickname" id="InputNickname"
-                                               value="{{ request.user.nickname }}" required="required"
-                                               data-error="Name is required.">
+                                               value="{{ request.user.nickname }}">
                                         <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
@@ -331,9 +327,9 @@
                                 </div>
                                 <div class="column col-md-12">
                                     <div class="form-group">
-                                        <label style="color: #000; font-weight: bold" for="InputMessage">个性签名:</label>
-                                        <textarea name="InputMessage"
-                                                  id="InputMessage"
+                                        <label style="color: #000; font-weight: bold" for="InputDesc">个性签名:</label>
+                                        <textarea name="InputDesc"
+                                                  id="InputDesc"
                                                   class="form-control" rows="5"
                                                   required="required"
                                                   data-error="Message is required.">{{ request.user.desc }}</textarea>
@@ -342,15 +338,14 @@
                                 </div>
                             </div>
 
-                            <button id="submit" class="btn btn-default">
+                            <button id="modifyInfoBtn" type="button" class="btn btn-default">
                                 <svg t="1601967461369" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                      xmlns="http://www.w3.org/2000/svg" p-id="1842" width="20" height="20">
                                     <path d="M486.577954 156.09136h101.688183v203.376366a101.688183 101.688183 0 0 1-101.688183 101.688183h-152.532274a101.688183 101.688183 0 0 1-101.688182-101.688183v-203.376366h101.688182v203.376366h152.532274z m-279.642502-101.688182H610.129096a152.532274 152.532274 0 0 1 108.806356 47.285005l208.460774 217.612711a152.532274 152.532274 0 0 1 42.200596 105.247269v392.516385a152.532274 152.532274 0 0 1-152.532274 152.532274h-610.129096a152.532274 152.532274 0 0 1-152.532274-152.532274v-610.129096a152.532274 152.532274 0 0 1 152.532274-152.532274z m0 101.688182a50.844091 50.844091 0 0 0-50.844092 50.844092v610.129096a50.844091 50.844091 0 0 0 50.844092 50.844092h610.129096a50.844091 50.844091 0 0 0 50.844092-50.844092V424.548163a50.844091 50.844091 0 0 0-14.236346-35.082423L645.71996 171.853029a50.844091 50.844091 0 0 0-35.590864-15.761669z"
                                           fill="#ffffff" p-id="1843"></path>
                                 </svg>
                                 保存修改
-                            </button><!-- Send Button -->
-
+                            </button>
                         </form>
                         <!-- wallet Form end -->
                     </div>
@@ -428,6 +423,7 @@
 
 {% block scripts %}
     <script type="text/javascript">
+        // 书籍封面的特效
         $(".con ul li").hover(function () {
             $(this).find(".txt").stop().animate({height: "50%"}, 400);
             $(this).find(".txt h3").stop().animate({paddingTop: "60px"}, 400);
@@ -435,6 +431,7 @@
             $(this).find(".txt").stop().animate({height: "45px"}, 400);
             $(this).find(".txt h3").stop().animate({paddingTop: "0px"}, 400);
         });
+        // 充值按钮点击事件
         $("#rechargeBtn").click(function () {
             let count = $('#rechargeNum').val();  //获取充值的数额
             $.ajax({
@@ -444,6 +441,32 @@
                 dataType: 'json',
                 data: JSON.stringify({
                     "count": count
+                }),
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (e) {
+                    //这里之后根据错误信息来进行提示
+                    console.log(e);
+                }
+            });
+        });
+
+        // 修改个人资料点击事件
+        $("#modifyInfoBtn").click(function () {
+            let nickname = $('#InputNickname').val();  // 昵称
+            let gender = $('#InputGender').val();  // 性别
+            let desc = $('#InputDesc').val();  // 个性签名
+            // 后期加上数据验证
+            $.ajax({
+                type: 'POST',
+                url: '{% url "Users:modify_userInfo" %}',
+                contentType: 'application/json', //以json格式传数据
+                dataType: 'json',
+                data: JSON.stringify({
+                    "nickname": nickname,
+                    "gender": gender,
+                    "desc": desc,
                 }),
                 success: function (data) {
                     console.log(data);

@@ -123,3 +123,36 @@ def modifyStars(request):
         resp['msg'] = '余额不足,请充值!'
         return JsonResponse(status=400, data=resp)  # 这写法有点傻逼,后期优化下
     return JsonResponse(resp)
+
+
+@require_POST
+@check_login
+def modifyUserInfo(request):
+    data = json.loads(request.body)
+    resp = {
+        'status': 1,
+        'msg': '',
+    }
+    try:
+        nickname = data['nickname']
+        gender = data['gender']
+        desc = data['desc']
+
+        # 判断是否有空的数据
+        if not all((nickname, gender, desc)):
+            raise DataError('数据不能为空!')
+
+        user = request.user
+        user.nickname = nickname
+        user.gender = gender
+        user.desc = desc
+        user.save()
+    except KeyError:
+        resp['status'] = 2
+        resp['msg'] = '不合法的参数!'
+        return JsonResponse(status=400, data=resp)  # 这写法有点傻逼,后期优化下
+    except DataError as e:
+        resp['status'] = 2
+        resp['msg'] = str(e)
+        return JsonResponse(status=400, data=resp)  # 这写法有点傻逼,后期优化下
+    return JsonResponse(resp)

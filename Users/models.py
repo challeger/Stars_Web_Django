@@ -59,9 +59,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField('邮箱')
     avatar = models.ImageField(upload_to=_user_directory_path, blank=True,
                                default='user/avatar/default.jpg', verbose_name='头像')
-    nickname = models.CharField(max_length=20, verbose_name='昵称', unique=True, db_index=True)
+    nickname = models.CharField(max_length=20, verbose_name='昵称', unique=True, db_index=True, null=False)
     gender = models.CharField(max_length=2, choices=Gender.choices, blank=True, default=Gender.SECRET)
-    desc = models.CharField(max_length=50, blank=True, default='我们的征途是星辰大海!', verbose_name='个性签名')
+    desc = models.CharField(max_length=50, blank=True, null=False, default='我们的征途是星辰大海!', verbose_name='个性签名')
     exp = models.PositiveIntegerField(default=0, verbose_name='经验值')
     stars = models.PositiveBigIntegerField(default=0, verbose_name='星币')
     mon_tickets = models.PositiveIntegerField(default=0, verbose_name='月票')
