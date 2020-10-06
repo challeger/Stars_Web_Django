@@ -19,4 +19,5 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('email_register_verify/', views.email_register_verify, name='email_register_verify'),
     path('center/', views.main, name='center'),
+    path('modify_stars/', views.modifyStars, name='modify_stars'),
 ]

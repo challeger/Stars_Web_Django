@@ -2,6 +2,7 @@ import json
 
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
+from django.db import DataError
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
@@ -90,5 +91,35 @@ def email_register_verify(request):
 
 
 @require_GET
+@check_login
 def main(request):
     return render(request, 'users/center.html', context={'GENDER': Gender.choices})
+
+
+@require_POST
+@check_login
+def modifyStars(request):
+    """
+    充值与消费星币接口
+    :param request:
+    :return:
+    """
+    data = json.loads(request.body)
+    resp = {
+        'status': 1,
+        'msg': '',
+    }
+    try:
+        count = int(data['count'])  # 获取要充值的数量
+        request.user.stars += count  # 加上充值的金额
+        request.user.save()  # 保存更改
+        resp['msg'] = '充值成功!' if count > 0 else '消费成功!'
+    except KeyError:
+        resp['status'] = 2
+        resp['msg'] = '不合法的参数!'
+        return JsonResponse(status=400, data=resp)  # 这写法有点傻逼,后期优化下
+    except DataError:
+        resp['status'] = 2
+        resp['msg'] = '余额不足,请充值!'
+        return JsonResponse(status=400, data=resp)  # 这写法有点傻逼,后期优化下
+    return JsonResponse(resp)

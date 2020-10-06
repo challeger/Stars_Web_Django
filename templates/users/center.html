@@ -5,6 +5,27 @@
     <link rel="stylesheet" href="{% static 'users/css/center-style.css' %}">
 {% endblock %}
 {% block body %}
+    <!-- Modal -->
+    <div class="modal fade" id="rechargeModal" tabindex="-1" role="dialog" aria-labelledby="rechargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="rechargeModalLabel">充值</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label for="rechargeNum">充值金额:</label>
+                    <input type="text" id="rechargeNum">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="rechargeBtn">充爆!</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="site-wrapper">
         <!-- header -->
         <header class="left float-left shadow-dark" id="header">
@@ -243,7 +264,7 @@
                                 <h5 class="card-title">星币</h5>
                                 <span style="font-size: 20px; font-weight: bold">{{ request.user.stars }}</span>
                                 <br>
-                                <a href="#" class="btn btn-outline-danger">充值</a>
+                                <a data-toggle="modal" data-target="#rechargeModal" class="btn btn-outline-danger">充值</a>
                             </div>
                         </div>
                     </div>
@@ -338,6 +359,7 @@
 
             </section>
 
+            <!-- section password -->
             <section id="setPassword" class="shadow-blue white-bg padding">
                 <h3 class="section-title">修改密码 </h3>
                 <div class="spacer" data-height="80"></div>
@@ -412,6 +434,25 @@
         }, function () {
             $(this).find(".txt").stop().animate({height: "45px"}, 400);
             $(this).find(".txt h3").stop().animate({paddingTop: "0px"}, 400);
+        });
+        $("#rechargeBtn").click(function () {
+            let count = $('#rechargeNum').val();  //获取充值的数额
+            $.ajax({
+                type: 'POST',
+                url: '{% url "Users:modify_stars" %}',
+                contentType: 'application/json', //以json格式传数据
+                dataType: 'json',
+                data: JSON.stringify({
+                    "count": count
+                }),
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (e) {
+                    //这里之后根据错误信息来进行提示
+                    console.log(e);
+                }
+            });
         });
     </script>
 {% endblock %}
