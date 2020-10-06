@@ -94,7 +94,7 @@
                 else {
                     $.ajax({
                         type: 'POST',
-                        url: '/users/email_register_verify/',
+                        url: '{% url "Users:email_register_verify" %}',
                         contentType: 'application/json', //以json格式传数据
                         dataType: 'json',
                         data: JSON.stringify({
