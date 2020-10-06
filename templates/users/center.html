@@ -1,0 +1,417 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}个人中心{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'users/css/center-style.css' %}">
+{% endblock %}
+{% block body %}
+    <div class="site-wrapper">
+        <!-- header -->
+        <header class="left float-left shadow-dark" id="header">
+            <button type="button" class="close" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="header-inner d-flex align-items-start flex-column">
+                <a href="#"><img class="rounded mx-auto d-block" src="/media/{{ request.user.avatar }}"
+                                 alt="{{ request.user }}"/></a>
+                <a href="#" class="site-title mt-3">{{ request.user }}</a>
+                <span class="site-slogan">{{ request.user.desc }}</span>
+
+                <!-- navigation menu -->
+                <nav>
+                    <ul class="vertical-menu scrollspy">
+                        <li><a href="#shelf">
+                            <svg t="1601956299595" class="icon" viewBox="0 0 1097 1024" version="1.1"
+                                 xmlns="http://www.w3.org/2000/svg" p-id="2226" width="22" height="22">
+                                <path d="M998.58390632 852.14701166H126.84569332A41.51236 41.51236 0 0 0 85.33333332 893.65937166v62.26854a41.51236 41.51236 0 0 0 41.51236 41.51236h871.738213a41.51236 41.51236 0 0 0 41.51236-41.51236v-62.26854a41.51236 41.51236 0 0 0-41.51236-41.51236z m-29.293426 83.014048h-813.172704a8.537246 8.537246 0 0 1-8.537246-8.537246v-3.681687a8.537246 8.537246 0 0 1 8.537246-8.537247h813.172704a8.537246 8.537246 0 0 1 8.537246 8.537247v3.681687a8.537246 8.537246 0 0 1-8.537246 8.537246zM126.84569332 810.63465166h124.537079a41.51236 41.51236 0 0 0 41.51236-41.51236V229.47228566a41.51236 41.51236 0 0 0-41.51236-41.51236H126.84569332A41.51236 41.51236 0 0 0 85.33333332 229.47228566v539.650006a41.51236 41.51236 0 0 0 41.51236 41.51236zM156.72605532 246.49342066h64.883071a12.805869 12.805869 0 0 1 12.805869 12.805869v479.995998a12.805869 12.805869 0 0 1-12.805869 12.80587H156.72605532a12.805869 12.805869 0 0 1-12.80587-12.80587V259.29928966a12.805869 12.805869 0 0 1 12.80587-12.805869z m239.939305 564.141231h124.53708a41.51236 41.51236 0 0 0 41.51236-41.51236V278.62548066l291.653674 510.335237 0.266789 0.480221a41.619075 41.619075 0 0 0 56.826045 15.527116l107.932136-62.962191A42.600859 42.600859 0 0 0 1034.18422332 684.02729066L727.73976932 147.49337866l-0.266789-0.48022a41.619075 41.619075 0 0 0-56.826045-15.527116l-107.932135 62.962191V84.17902666A41.51236 41.51236 0 0 0 521.20244032 42.66666666h-124.53708a41.51236 41.51236 0 0 0-41.51236 41.51236v684.943265a41.51236 41.51236 0 0 0 41.51236 41.51236z m296.295802-597.938055a3.735045 3.735045 0 0 1 5.122348 1.376631l259.841761 454.608363a12.805869 12.805869 0 0 1-4.663471 17.415982l-56.271124 32.825712a12.805869 12.805869 0 0 1-17.544041-4.663471L624.11894332 267.59109066a12.805869 12.805869 0 0 1 4.663471-17.415983zM426.49236432 101.20016166h64.883072a12.805869 12.805869 0 0 1 12.805869 12.805869v625.289257a12.805869 12.805869 0 0 1-12.805869 12.80587h-64.883072a12.805869 12.805869 0 0 1-12.805869-12.80587V114.00603066a12.805869 12.805869 0 0 1 12.805869-12.805869z m0 0"
+                                      p-id="2227" fill="#ffffff"></path>
+                            </svg>&nbsp;&nbsp;我的书架</a></li>
+                        <li><a href="#wallet">
+                            <svg t="1601956557043" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                 xmlns="http://www.w3.org/2000/svg" p-id="3889" width="22" height="22">
+                                <path d="M884.363636 857.367273H116.363636c-25.6 0-46.545455-20.945455-46.545454-46.545455v-628.363636c0-25.6 20.945455-46.545455 46.545454-46.545455h488.96c12.8 0 23.272727 10.472727 23.272728 23.272728s-10.472727 23.272727-23.272728 23.272727H116.363636v628.363636h768v-628.363636h-93.090909c-12.8 0-23.272727-10.472727-23.272727-23.272727s10.472727-23.272727 23.272727-23.272728h93.090909c25.6 0 46.545455 20.945455 46.545455 46.545455v628.363636c0 25.6-20.945455 46.545455-46.545455 46.545455z"
+                                      fill="#ffffff" p-id="3890"></path>
+                                <path d="M907.636364 636.276364h-209.454546c-77.032727 0-139.636364-62.603636-139.636363-139.636364 0-37.236364 14.429091-72.378182 40.727272-98.676364A138.891636 138.891636 0 0 1 698.181818 357.003636h209.454546c12.8 0 23.272727 10.472727 23.272727 23.272728v232.727272c0 12.8-10.472727 23.272727-23.272727 23.272728z m-209.454546-232.727273c-24.901818 0-48.174545 9.774545-65.861818 27.461818-17.687273 17.454545-27.229091 40.727273-27.229091 65.629091 0 51.432727 41.658182 93.090909 93.090909 93.090909h186.181818v-186.181818h-186.181818z"
+                                      fill="#ffffff" p-id="3891"></path>
+                                <path d="M791.272727 566.458182c-38.4 0-69.818182-31.418182-69.818182-69.818182s31.418182-69.818182 69.818182-69.818182 69.818182 31.418182 69.818182 69.818182-31.418182 69.818182-69.818182 69.818182z m0-93.090909c-12.8 0-23.272727 10.472727-23.272727 23.272727s10.472727 23.272727 23.272727 23.272727 23.272727-10.472727 23.272728-23.272727-10.472727-23.272727-23.272728-23.272727z"
+                                      fill="#ffffff" p-id="3892"></path>
+                            </svg>
+                            &nbsp;我的钱包</a></li>
+                        <li><a href="#user">
+                            <svg t="1601956464956" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                 xmlns="http://www.w3.org/2000/svg" p-id="2959" width="22" height="22">
+                                <path d="M504.6 540.5c62-39.8 103.1-109.4 103.1-188.6 0-123.7-100.2-223.9-223.9-223.9S159.9 228.2 159.9 351.9c0 79.2 41.1 148.8 103.1 188.6C145.9 586.3 63.3 697.3 63.3 831H129c8-133.8 119.1-233.9 254.9-233.9S630.8 697.2 638.8 831h65.5c0-133.7-82.6-244.7-199.7-290.5zM221.8 352c0-88.4 71.6-160 160-160s160 71.6 160 160-71.6 160-160 160-160-71.6-160-160z"
+                                      p-id="2960" fill="#ffffff"></path>
+                                <path d="M553 128h23.1l0.2-64h320.2c35.6 0 64.5 28.9 64.5 64.5v638c0 35.6-28.9 64.5-64.5 64.5H768.3v-64h91.4c20.6 0 37.3-16.7 37.3-37.3V165.3c0-20.6-16.7-37.3-37.3-37.3H576.1m192.2 639"
+                                      p-id="2961" fill="#ffffff"></path>
+                                <path d="M640 192h192v64H640zM640 320h192v64H640zM640 448h192v64H640zM704 576h128v64H704z"
+                                      p-id="2962" fill="#ffffff"></path>
+                            </svg>
+                            &nbsp;个人资料</a></li>
+                        <li><a href="#setPassword">
+                            <svg t="1601967685657" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                 xmlns="http://www.w3.org/2000/svg" p-id="2875" width="20" height="20">
+                                <path d="M207.745655 415.371324h22.757333V290.225989C230.502988 130.954654 355.658321 0.129985 514.939656 0.129985s284.436668 130.824669 284.436667 290.096004c0 34.126001-22.757333 56.883334-56.883334 56.883334s-56.883334-22.757333-56.883334-56.883334c0-96.698668-73.951334-176.339335-170.660001-176.339335s-170.660001 79.630668-170.66 176.339335V421.050658h477.854001c85.33-5.689333 147.912666 62.572667 147.912667 142.203336v312.853337c0 79.630668-62.572667 147.892669-147.912667 147.892669H202.056322c-79.640667 0-147.912666-68.262001-147.912667-147.892669V563.263993c5.699332-79.640667 68.271999-147.892669 153.602-147.892669z m-34.126001 460.746006c0 17.068 11.378667 34.126001 34.136 34.126001h614.388001c22.757333 0 34.136-17.068 34.136-34.126001V563.263993c0-17.068-11.378667-34.126001-34.136-34.126001H202.056322c-17.068 0-34.136 17.068-34.136 34.126001v312.853337h5.699332z"
+                                      p-id="2876" fill="#ffffff"></path>
+                            </svg>&nbsp;&nbsp;修改密码
+                        </a></li>
+                    </ul>
+                </nav>
+                <!-- footer -->
+                <div class="footer mt-auto">
+                    <!-- copyright -->
+                    <span class="copyright">© 2020 {{ request.user }}</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- main content area -->
+        <main class="content float-right">
+            <!-- section shelf -->
+            <section id="shelf" class="shadow-blue white-bg padding">
+                <h3 class="section-title">我的书架</h3>
+                <div class="spacer" data-height="80"></div>
+
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+                           role="tab" aria-controls="nav-home" aria-selected="true">书架1</a>
+                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+                           role="tab" aria-controls="nav-profile" aria-selected="false">书架2</a>
+                        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact"
+                           role="tab" aria-controls="nav-contact" aria-selected="false">书架3</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <div class="con">
+                            <ul>
+                                <li>
+                                    <img style="object-fit: cover;"
+                                         src="http://alioss.youdubook.com/uploads/20201004/532c28d21b123800d1dac2db0fcda0f5.jpg"
+                                         alt=""/>
+                                    <div class="txt">
+                                        <a href="#">弗雷尔卓德的孤狼</a>
+                                        <p><a href="">最新章节: 第xxx章 我也不知道是什么章节</a></p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img style="object-fit: cover;"
+                                         src="http://alioss.youdubook.com/uploads/20200927/960e679eacbd6ac26cd03ee981267711.jpg"
+                                         alt=""/>
+                                    <div class="txt">
+                                        <a href="#">弗雷尔卓德的孤狼</a>
+                                        <p>为您铺就成为IT大神的在线学习之路</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img style="object-fit: cover;"
+                                         src="http://alioss.youdubook.com/uploads/20201004/532c28d21b123800d1dac2db0fcda0f5.jpg"
+                                         alt=""/>
+                                    <div class="txt">
+                                        <a href="#">弗雷尔卓德的孤狼</a>
+                                        <p><a href="">最新章节: 第xxx章 我也不知道是什么章节</a></p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img style="object-fit: cover;"
+                                         src="http://alioss.youdubook.com/uploads/20201004/532c28d21b123800d1dac2db0fcda0f5.jpg"
+                                         alt=""/>
+                                    <div class="txt">
+                                        <a href="#">弗雷尔卓德的孤狼</a>
+                                        <p><a href="">最新章节: 第xxx章 我也不知道是什么章节</a></p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        <div class="con">
+                            <ul>
+                                <li>
+                                    <img style="object-fit: cover;"
+                                         src="http://alioss.youdubook.com/uploads/20201004/532c28d21b123800d1dac2db0fcda0f5.jpg"
+                                         alt=""/>
+                                    <div class="txt">
+                                        <a href="#">弗雷尔卓德的孤狼</a>
+                                        <p><a href="">最新章节: 第xxx章 我也不知道是什么章节</a></p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img style="object-fit: cover;"
+                                         src="http://alioss.youdubook.com/uploads/20200927/960e679eacbd6ac26cd03ee981267711.jpg"
+                                         alt=""/>
+                                    <div class="txt">
+                                        <a href="#">弗雷尔卓德的孤狼</a>
+                                        <p>为您铺就成为IT大神的在线学习之路</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img style="object-fit: cover;"
+                                         src="http://alioss.youdubook.com/uploads/20201004/532c28d21b123800d1dac2db0fcda0f5.jpg"
+                                         alt=""/>
+                                    <div class="txt">
+                                        <a href="#">弗雷尔卓德的孤狼</a>
+                                        <p><a href="">最新章节: 第xxx章 我也不知道是什么章节</a></p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img style="object-fit: cover;"
+                                         src="http://alioss.youdubook.com/uploads/20201004/532c28d21b123800d1dac2db0fcda0f5.jpg"
+                                         alt=""/>
+                                    <div class="txt">
+                                        <a href="#">弗雷尔卓德的孤狼</a>
+                                        <p><a href="">最新章节: 第xxx章 我也不知道是什么章节</a></p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                        <div class="con">
+                            <ul>
+                                <li>
+                                    <img style="object-fit: cover;"
+                                         src="http://alioss.youdubook.com/uploads/20201004/532c28d21b123800d1dac2db0fcda0f5.jpg"
+                                         alt=""/>
+                                    <div class="txt">
+                                        <a href="#">弗雷尔卓德的孤狼</a>
+                                        <p><a href="">最新章节: 第xxx章 我也不知道是什么章节</a></p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img style="object-fit: cover;"
+                                         src="http://alioss.youdubook.com/uploads/20200927/960e679eacbd6ac26cd03ee981267711.jpg"
+                                         alt=""/>
+                                    <div class="txt">
+                                        <a href="#">弗雷尔卓德的孤狼</a>
+                                        <p>为您铺就成为IT大神的在线学习之路</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img style="object-fit: cover;"
+                                         src="http://alioss.youdubook.com/uploads/20201004/532c28d21b123800d1dac2db0fcda0f5.jpg"
+                                         alt=""/>
+                                    <div class="txt">
+                                        <a href="#">弗雷尔卓德的孤狼</a>
+                                        <p><a href="">最新章节: 第xxx章 我也不知道是什么章节</a></p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img style="object-fit: cover;"
+                                         src="http://alioss.youdubook.com/uploads/20201004/532c28d21b123800d1dac2db0fcda0f5.jpg"
+                                         alt=""/>
+                                    <div class="txt">
+                                        <a href="#">弗雷尔卓德的孤狼</a>
+                                        <p><a href="">最新章节: 第xxx章 我也不知道是什么章节</a></p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- section wallet -->
+            <section id="wallet" class="shadow-blue white-bg padding">
+                <h3 class="section-title">我的钱包</h3>
+                <div class="spacer" data-height="80"></div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">月票</h5>
+                                <span style="font-size: 20px; font-weight: bold">{{ request.user.mon_tickets }}</span>
+                                <br>
+                                <a href="#" class="btn btn-outline-warning">占格子</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">推荐票</h5>
+                                <span style="font-size: 20px; font-weight: bold">{{ request.user.re_tickets }}</span>
+                                <br>
+                                <a href="#" class="btn btn-outline-success">占格子</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">星币</h5>
+                                <span style="font-size: 20px; font-weight: bold">{{ request.user.stars }}</span>
+                                <br>
+                                <a href="#" class="btn btn-outline-danger">充值</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- section user -->
+            <section id="user" class="shadow-blue white-bg padding">
+                <h3 class="section-title">个人资料</h3>
+                <div class="spacer" data-height="80"></div>
+
+                <div class="row">
+
+                    <div class="col-md-4 mb-4 mb-md-0">
+                        <!-- wallet info -->
+                        <div class="wallet-info mb-5">
+                            <i class="icon-phone"></i>
+                            <div class="details">
+                                <h5>账号</h5>
+                                <span>{{ request.user.username }}</span>
+                            </div>
+                        </div>
+                        <div class="wallet-info mb-5">
+                            <i class="icon-envelope"></i>
+                            <div class="details">
+                                <h5>邮箱</h5>
+                                <span>{{ request.user.email }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <!-- wallet Form -->
+                        <form id="user-info-form" class="wallet-form">
+
+                            <div class="messages"></div>
+
+                            <div class="row">
+                                <div class="column col-md-12">
+                                    <div class="form-group">
+                                        <img class="rounded avatar img-thumbnail" src="/media/{{ request.user.avatar }}"
+                                             alt="{{ request.user }}"/>
+                                        <a style="margin-left: 20px;margin-top: 10%;" class="btn btn-outline-danger">上传头像</a>
+                                    </div>
+                                </div>
+                                <div class="column col-md-4">
+                                    <div class="form-group">
+                                        <label style="color: #000; font-weight: bold" for="InputNickname">昵称:</label>
+                                        <input class="form-control" name="nickname" id="InputNickname"
+                                               value="{{ request.user.nickname }}" required="required"
+                                               data-error="Name is required.">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="column col-md-4">
+                                    <div class="form-group">
+                                        <label style="color: #000; font-weight: bold" for="InputGender">性别:</label>
+                                        <select class="form-control" name="gender" id="InputGender">
+                                            {% for choice in GENDER %}
+                                                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="column col-md-12">
+                                    <div class="form-group">
+                                        <label style="color: #000; font-weight: bold" for="InputMessage">个性签名:</label>
+                                        <textarea name="InputMessage"
+                                                  id="InputMessage"
+                                                  class="form-control" rows="5"
+                                                  required="required"
+                                                  data-error="Message is required.">{{ request.user.desc }}</textarea>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button id="submit" class="btn btn-default">
+                                <svg t="1601967461369" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                     xmlns="http://www.w3.org/2000/svg" p-id="1842" width="20" height="20">
+                                    <path d="M486.577954 156.09136h101.688183v203.376366a101.688183 101.688183 0 0 1-101.688183 101.688183h-152.532274a101.688183 101.688183 0 0 1-101.688182-101.688183v-203.376366h101.688182v203.376366h152.532274z m-279.642502-101.688182H610.129096a152.532274 152.532274 0 0 1 108.806356 47.285005l208.460774 217.612711a152.532274 152.532274 0 0 1 42.200596 105.247269v392.516385a152.532274 152.532274 0 0 1-152.532274 152.532274h-610.129096a152.532274 152.532274 0 0 1-152.532274-152.532274v-610.129096a152.532274 152.532274 0 0 1 152.532274-152.532274z m0 101.688182a50.844091 50.844091 0 0 0-50.844092 50.844092v610.129096a50.844091 50.844091 0 0 0 50.844092 50.844092h610.129096a50.844091 50.844091 0 0 0 50.844092-50.844092V424.548163a50.844091 50.844091 0 0 0-14.236346-35.082423L645.71996 171.853029a50.844091 50.844091 0 0 0-35.590864-15.761669z"
+                                          fill="#ffffff" p-id="1843"></path>
+                                </svg>
+                                保存修改
+                            </button><!-- Send Button -->
+
+                        </form>
+                        <!-- wallet Form end -->
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section id="setPassword" class="shadow-blue white-bg padding">
+                <h3 class="section-title">修改密码 </h3>
+                <div class="spacer" data-height="80"></div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <form id="user-info-form" class="wallet-form">
+                            <div class="row">
+                                <div class="column col-md-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <label style="color: #000; font-weight: bold" for="InputOldPassword">原密码:</label>
+
+                                                <input class="form-control" name="oldPassword" id="InputOldPassword"
+                                                       placeholder="请输入您的原密码"
+                                                       type="password" data-error="原密码错误">
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <a style="margin-top: 7%;" href="#">忘记密码?</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="column col-md-7">
+                                    <div class="form-group">
+                                        <label style="color: #000; font-weight: bold" for="InputNewPassword">新密码:</label>
+                                        <input class="form-control" name="newPassword" id="InputNewPassword"
+                                               placeholder="请输入您的新密码"
+                                               type="password" data-error="密码必须以字母开头,8-20位!">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="column col-md-7">
+                                    <div class="form-group">
+                                        <label style="color: #000; font-weight: bold" for="InputReNewPassword">再次输入:</label>
+                                        <input class="form-control" name="re_newPassword" id="InputReNewPassword"
+                                               placeholder="请再次输入您的新密码"
+                                               type="password" data-error="两次密码不一致!">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="submit" class="btn btn-default">
+                                <svg t="1601967461369" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                     xmlns="http://www.w3.org/2000/svg" p-id="1842" width="20" height="20">
+                                    <path d="M486.577954 156.09136h101.688183v203.376366a101.688183 101.688183 0 0 1-101.688183 101.688183h-152.532274a101.688183 101.688183 0 0 1-101.688182-101.688183v-203.376366h101.688182v203.376366h152.532274z m-279.642502-101.688182H610.129096a152.532274 152.532274 0 0 1 108.806356 47.285005l208.460774 217.612711a152.532274 152.532274 0 0 1 42.200596 105.247269v392.516385a152.532274 152.532274 0 0 1-152.532274 152.532274h-610.129096a152.532274 152.532274 0 0 1-152.532274-152.532274v-610.129096a152.532274 152.532274 0 0 1 152.532274-152.532274z m0 101.688182a50.844091 50.844091 0 0 0-50.844092 50.844092v610.129096a50.844091 50.844091 0 0 0 50.844092 50.844092h610.129096a50.844091 50.844091 0 0 0 50.844092-50.844092V424.548163a50.844091 50.844091 0 0 0-14.236346-35.082423L645.71996 171.853029a50.844091 50.844091 0 0 0-35.590864-15.761669z"
+                                          fill="#ffffff" p-id="1843"></path>
+                                </svg>
+                                修改密码
+                            </button><!-- Send Button -->
+
+                        </form>
+                        <!-- wallet Form end -->
+                    </div>
+
+                </div>
+
+            </section>
+        </main>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        $(".con ul li").hover(function () {
+            $(this).find(".txt").stop().animate({height: "50%"}, 400);
+            $(this).find(".txt h3").stop().animate({paddingTop: "60px"}, 400);
+        }, function () {
+            $(this).find(".txt").stop().animate({height: "45px"}, 400);
+            $(this).find(".txt h3").stop().animate({paddingTop: "0px"}, 400);
+        });
+    </script>
+{% endblock %}

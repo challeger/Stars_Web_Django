@@ -10,7 +10,7 @@ from django.views import View
 from django.views.decorators.http import require_POST, require_GET
 
 from Stars_Web_Django.settings import EMAIL_FROM
-from Users.models import User, EmailValid, EmailType
+from Users.models import User, EmailValid, EmailType, Gender
 from utils.email import get_random_code, check_email
 from utils.permission import check_login
 
@@ -23,7 +23,7 @@ def login_auth(request):
         # 验证密码
         if not user.check_password(data['password']):
             return JsonResponse(status=400, data={'status': 2, 'msg': '用户名或密码错误!'})
-        obj = redirect(reverse('Users:login'))
+        obj = redirect(reverse('Users:center'))
         obj.set_cookie('Token', user.token, 60*60*24)
     # 未找到用户
     except User.DoesNotExist:
@@ -67,7 +67,6 @@ def email_register_verify(request):
         if not obj:
             subject = '【群星小说网】欢迎加入群星小说网~请接收您的验证码'  # 邮件标题
             code = get_random_code()  # 获取一个随机的验证码
-            print(code)
             text_content = f'我才不会告诉你验证码是 {code} 呢!'  # 邮件的文本格式
             html_content = f'<span>我才不会告诉你验证码是 <br><b>{code}</b><br> </span>呢!'  # 邮件的html格式
             msg = EmailMultiAlternatives(subject, text_content, EMAIL_FROM, [email])
@@ -91,6 +90,5 @@ def email_register_verify(request):
 
 
 @require_GET
-@check_login
 def main(request):
-    return HttpResponse('用户中心')
+    return render(request, 'users/center.html', context={'GENDER': Gender.choices})
