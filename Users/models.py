@@ -58,7 +58,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=15, verbose_name='用户名', unique=True)
     email = models.EmailField('邮箱')
     avatar = models.ImageField(upload_to=_user_directory_path, blank=True,
-                               default='user/avatar/default', verbose_name='头像')
+                               default='user/avatar/default.jpg', verbose_name='头像')
     nickname = models.CharField(max_length=20, verbose_name='昵称', unique=True, db_index=True)
     gender = models.CharField(max_length=2, choices=Gender.choices, blank=True, default=Gender.SECRET)
     desc = models.CharField(max_length=50, blank=True, default='我们的征途是星辰大海!', verbose_name='个性签名')
