@@ -128,7 +128,6 @@
 
         function login_click(){
             let formData = $('#login_form').serializeArray();
-            console.log(formData);
             // 后期加上数据验证
             $.ajax({
                 url: "{% url 'Users:login_auth' %}",
@@ -144,9 +143,7 @@
                 },
                 error: function (e) {
                     // 后期根据返回的status来进行对应的提示
-                    console.log(e.responseJSON.status);
-                    console.log(e.responseJSON.msg);
-                }
+                },
             })
         }
         function register_click(){

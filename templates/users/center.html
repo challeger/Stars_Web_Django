@@ -2,10 +2,11 @@
 {% load static %}
 {% block title %}个人中心{% endblock %}
 {% block css %}
+    <link href="https://cdn.bootcdn.net/ajax/libs/cropper/4.0.0/cropper.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'users/css/center-style.css' %}">
 {% endblock %}
 {% block body %}
-    <!-- Modal -->
+    <!-- Recharge Modal -->
     <div class="modal fade" id="rechargeModal" tabindex="-1" role="dialog" aria-labelledby="rechargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -22,6 +23,29 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary" id="rechargeBtn">充爆!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- upload head Modal -->
+    <div class="modal fade" id="upload-modal" data-backdrop="static" aria-labelledby="uploadModalLabel" aria-hidden="true" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="uploadModalLabel">请选择合适的区域作为头像</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="img-container">
+                        <img id="uploadPreview" src=""  style="width: auto; height: auto;" class="img-responsive center-block">
+                    </div>
+                    <div id="error_text" style="display:none"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" type="button">取消</button>
+                    <button class="btn btn-secondary" id="sendPhoto" type="button">上传</button>
                 </div>
             </div>
         </div>
@@ -302,9 +326,9 @@
                             <div class="row">
                                 <div class="column col-md-12">
                                     <div class="form-group">
-                                        <img class="rounded avatar img-thumbnail" src="/media/{{ request.user.avatar }}"
+                                        <img id="head-img" class="rounded avatar img-thumbnail" src="/media/{{ request.user.avatar }}"
                                              alt="{{ request.user }}"/>
-                                        <a style="margin-left: 20px;margin-top: 10%;" class="btn btn-outline-danger">上传头像</a>
+                                        <input type="file" id="input_head" name="file" onchange="preview(this)">上传头像
                                     </div>
                                 </div>
                                 <div class="column col-md-4">
@@ -422,6 +446,7 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="https://cdn.bootcdn.net/ajax/libs/cropper/4.0.0/cropper.min.js"></script>
     <script type="text/javascript">
         // 书籍封面的特效
         $(".con ul li").hover(function () {
@@ -477,5 +502,63 @@
                 }
             });
         });
+    </script>
+    <script>
+        function preview(obj) {
+            let upload_modal = $('#upload-modal');
+            let val = obj.value;
+            let upLoadType = '.jpg,.gif,.bmp,.png,.jpeg';
+            let fileExt = val.substr(val.lastIndexOf('.')).toLowerCase();
+            let result = upLoadType.indexOf(fileExt);
+            let oFile = obj.files[0];
+            if (obj.files.length === 0 || result < 0){
+                alert('请上传正确格式的文件 jpg|png|bmp|png|jpeg');
+                document.getElementById('uploadPreview').parentElement.style.display = 'none';
+                return null;
+            }
+            if (oFile.size / 1024 > 3072){
+                alert('请上传3mb以内的文件!!');
+                document.getElementById('uploadPreview').parentElement.style.display = 'none';
+                return null;
+            }
+            upload_modal.on('show.bs.modal', function () {
+                let blobURL;
+                let URL = window.URL || window.webkitURL;
+                blobURL = URL.createObjectURL(oFile);
+                document.getElementById('uploadPreview').parentElement.style.display = 'block';
+                document.getElementById('uploadPreview').src = blobURL;
+
+                $('#uploadPreview').cropper({
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    ready: function (data) {
+
+                    }
+                });
+
+                $('#uploadPreview').cropper('reset').cropper('replace', blobURL);
+            });
+
+            $('#sendPhoto').on('click', function () {
+                $('#uploadPreview').cropper('getCroppedCanvas', {
+                    width: 150,
+                    height: 150,
+                }).toBlob(function (blob) {
+                    document.getElementById('head-img').src = URL.createObjectURL(blob);
+                    window.headImg = blob;
+                    upload_modal.modal('hide');
+                    obj.value = blob;
+                });
+            });
+
+            upload_modal.modal('show');
+        }
+
+        $('#upload-modal').on('hidden.bs.modal', function (e) {
+            document.getElementById('error_text').style.display = 'none';
+            document.getElementById('uploadPreview').src = '';
+            $('#uploadPreview').cropper('rest').cropper('replace', '');
+            $('#uploadPreview').cropper('destroy');
+        })
     </script>
 {% endblock %}

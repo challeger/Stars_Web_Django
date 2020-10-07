@@ -17,6 +17,10 @@
     $.ajaxSetup({
         beforeSend: function(xhr, settings){
             xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+        },
+        complete: function (xhr, status) {
+            console.log('complete');
+            console.log(xhr, status);
         }
     });
 </script>

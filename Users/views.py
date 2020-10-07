@@ -147,6 +147,8 @@ def modifyUserInfo(request):
         user.gender = gender
         user.desc = desc
         user.save()
+        resp['status'] = 1
+        resp['msg'] = '修改信息成功'
     except KeyError:
         resp['status'] = 2
         resp['msg'] = '不合法的参数!'
