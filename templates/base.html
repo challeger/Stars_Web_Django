@@ -1,18 +1,73 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'message/message.css' %}">
     {% block css %}{% endblock %}
 </head>
 <body>
+<!-- 修改密码 Modal -->
+<div class="modal fade" id="modifyPasswordModal" tabindex="-1" role="dialog" aria-labelledby="modifyPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modifyPasswordModalLabel">修改密码</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="column col-md-12">
+                            <fieldset disabled>
+                            <div class="form-group">
+                                <label style="color: #000; font-weight: bold" for="InputEmail">邮箱:</label>
+                                <input class="form-control" name="nickname" id="InputEmail"
+                                       value="{{ request.user.email }}">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            </fieldset>
+                        </div>
+                        <div class="column col-md-6">
+                            <div class="form-group">
+                                <label style="color: #000; font-weight: bold" for="InputCode">验证邮箱:</label>
+                                <input class="form-control" name="password" id="InputCode"
+                                       placeholder="请输入验证码">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="column col-md-6">
+                            <button class="btn btn-default" onclick="sendEmailCodeForPassword();" style="margin-top: 31px;">发送验证码</button>
+                        </div>
+                        <div class="column col-md-6 mt-2">
+                            <div class="form-group">
+                                <label style="color: #000; font-weight: bold" for="InputPassword">新密码:</label>
+                                <input class="form-control" type="password" id="InputPassword"
+                                       placeholder="请输入新密码">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="modifyPasswordByEmail();">修改</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% block body %}
 
 {% endblock %}
 </body>
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="{% static 'message/message.js' %}"></script>
 <script>
     $.ajaxSetup({
         beforeSend: function(xhr, settings){
@@ -22,6 +77,40 @@
 
         }
     });
+    function sendEmailCodeForPassword() {
+        $.ajax({
+            type: 'POST',
+            url: '{% url 'Users:email_modify_password_verify' %}',
+            success: function (data) {
+                $.message('发送验证码成功!');
+            },
+            error: function (e) {
+
+            }
+        })
+    }
+    function modifyPasswordByEmail() {
+        let code = $('#InputCode');
+        let password = $('#InputPassword');
+        $.ajax({
+            url: '{% url "Users:modify_password_with_email" %}',
+            type: 'POST',
+            data: {
+                code: code.val(),
+                password: password.val()
+            },
+            success: function () {
+                code.val(null);
+                password.val(null);  // 清空模态框里的输入值
+                $('#modifyPasswordModal').modal('hide');
+                $.message('修改密码成功!');
+            },
+            error: function () {
+                code.val(null);
+                password.val(null);  // 清空模态框里的输入值
+            },
+        })
+    }
 </script>
 {% block scripts %}
 {% endblock %}

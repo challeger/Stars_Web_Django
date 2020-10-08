@@ -18,8 +18,10 @@ urlpatterns = [
     path('login_auth/', views.login_auth, name='login_auth'),
     path('register/', views.register, name='register'),
     path('email_register_verify/', views.email_register_verify, name='email_register_verify'),
+    path('email_modify_password_verify/', views.email_modify_password_verify, name='email_modify_password_verify'),
     path('center/', views.main, name='center'),
     path('modify_stars/', views.modifyStars, name='modify_stars'),
     path('modify_userInfo/', views.modifyUserInfo, name='modify_userInfo'),
     path('modify_password/', views.modifyPassword, name='modify_password'),
+    path('modify_password_with_email/', views.modify_password_with_email, name='modify_password_with_email')
 ]

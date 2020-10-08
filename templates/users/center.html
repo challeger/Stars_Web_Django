@@ -373,16 +373,13 @@
                         </form>
                         <!-- wallet Form end -->
                     </div>
-
                 </div>
-
             </section>
 
             <!-- section password -->
             <section id="setPassword" class="shadow-blue white-bg padding">
                 <h3 class="section-title">修改密码 </h3>
                 <div class="spacer" data-height="80"></div>
-
                 <div class="row">
                     <div class="col-md-8">
                         <form id="user-info-form" class="wallet-form">
@@ -398,7 +395,7 @@
                                                        type="password">
                                                 <div class="invalid-feedback"></div>
                                             </div>
-                                            <a style="margin-top: 7%;" href="#">忘记密码?</a>
+                                            <a style="margin-top: 7%;" type="button" data-toggle="modal" data-target="#modifyPasswordModal">忘记密码?</a>
                                         </div>
                                     </div>
                                 </div>
@@ -497,6 +494,7 @@
                 contentType: false,
                 success: function (data) {
                     location.reload();  //修改成功,刷新页面
+                    $.message('修改个人资料成功');
                 },
                 error: function (e) {
                     //这里之后根据错误信息来进行提示
@@ -542,7 +540,7 @@
                     new_password: newPassword.val()
                 },
                 success: function (data) {
-
+                    $.message('修改密码成功');
                 },
                 error: function (e) {
 

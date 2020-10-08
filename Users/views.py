@@ -183,3 +183,48 @@ def modifyPassword(request):
     except Exception as e:
         print(e)
     return JsonResponse(resp)
+
+
+@require_POST
+@check_login
+def email_modify_password_verify(request):
+    resp = {
+        'status': 1,
+        'msg': '',
+    }
+    try:
+        subject = '【群星小说网】您正在尝试修改密码~'  # 邮件标题
+        code = get_random_code()  # 获取一个随机的验证码
+        text_content = f'我才不会告诉你验证码是 {code} 呢!'  # 邮件的文本格式
+        html_content = f'<span>我才不会告诉你验证码是 <br><b>{code}</b><br> </span>呢!'  # 邮件的html格式
+        msg = EmailMultiAlternatives(subject, text_content, EMAIL_FROM, [request.user.email])
+        msg.attach_alternative(html_content, 'text/html')
+        msg.send()
+        resp['status'] = 1
+        resp['msg'] = '发送邮件成功'
+    except Exception as e:
+        print(e)
+    else:
+        EmailValid.objects.create(code=code, email_address=request.user.email, email_type=EmailType.PASSWORD)
+    return JsonResponse(resp)
+
+
+@require_POST
+@check_login
+def modify_password_with_email(request):
+    resp = {
+        'status': 1,
+        'msg': ''
+    }
+    try:
+        code = request.POST.get('code')
+        email = check_email(request.user.email, EmailType.PASSWORD, code)  # 检查验证码
+        password = request.POST.get('password')
+        request.user.set_password(password)  # 修改密码
+        request.user.save()  # 保存修改
+        resp['msg'] = '修改密码成功'
+        email.delete()  # 修改成功后删除对应邮件
+    except Exception as e:
+        resp['status'] = 2
+        resp['msg'] = str(e)
+    return JsonResponse(resp)
