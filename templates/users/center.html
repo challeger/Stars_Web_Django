@@ -22,7 +22,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" id="rechargeBtn">充爆!</button>
+                    <button type="button" class="btn btn-primary" onclick="recharge();">充爆!</button>
                 </div>
             </div>
         </div>
@@ -362,7 +362,7 @@
                                 </div>
                             </div>
 
-                            <button id="modifyInfoBtn" type="button" class="btn btn-default">
+                            <button onclick="modifyInfo();" type="button" class="btn btn-default">
                                 <svg t="1601967461369" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                      xmlns="http://www.w3.org/2000/svg" p-id="1842" width="20" height="20">
                                     <path d="M486.577954 156.09136h101.688183v203.376366a101.688183 101.688183 0 0 1-101.688183 101.688183h-152.532274a101.688183 101.688183 0 0 1-101.688182-101.688183v-203.376366h101.688182v203.376366h152.532274z m-279.642502-101.688182H610.129096a152.532274 152.532274 0 0 1 108.806356 47.285005l208.460774 217.612711a152.532274 152.532274 0 0 1 42.200596 105.247269v392.516385a152.532274 152.532274 0 0 1-152.532274 152.532274h-610.129096a152.532274 152.532274 0 0 1-152.532274-152.532274v-610.129096a152.532274 152.532274 0 0 1 152.532274-152.532274z m0 101.688182a50.844091 50.844091 0 0 0-50.844092 50.844092v610.129096a50.844091 50.844091 0 0 0 50.844092 50.844092h610.129096a50.844091 50.844091 0 0 0 50.844092-50.844092V424.548163a50.844091 50.844091 0 0 0-14.236346-35.082423L645.71996 171.853029a50.844091 50.844091 0 0 0-35.590864-15.761669z"
@@ -395,8 +395,8 @@
 
                                                 <input class="form-control" name="oldPassword" id="InputOldPassword"
                                                        placeholder="请输入您的原密码"
-                                                       type="password" data-error="原密码错误">
-                                                <div class="help-block with-errors"></div>
+                                                       type="password">
+                                                <div class="invalid-feedback"></div>
                                             </div>
                                             <a style="margin-top: 7%;" href="#">忘记密码?</a>
                                         </div>
@@ -409,8 +409,8 @@
                                         <label style="color: #000; font-weight: bold" for="InputNewPassword">新密码:</label>
                                         <input class="form-control" name="newPassword" id="InputNewPassword"
                                                placeholder="请输入您的新密码"
-                                               type="password" data-error="密码必须以字母开头,8-20位!">
-                                        <div class="help-block with-errors"></div>
+                                               type="password">
+                                        <div class="invalid-feedback"></div>
                                     </div>
                                 </div>
                             </div>
@@ -420,19 +420,19 @@
                                         <label style="color: #000; font-weight: bold" for="InputReNewPassword">再次输入:</label>
                                         <input class="form-control" name="re_newPassword" id="InputReNewPassword"
                                                placeholder="请再次输入您的新密码"
-                                               type="password" data-error="两次密码不一致!">
-                                        <div class="help-block with-errors"></div>
+                                               type="password">
+                                        <div class="invalid-feedback"></div>
                                     </div>
                                 </div>
                             </div>
-                            <button id="submit" class="btn btn-default">
+                            <button class="btn btn-default" type="button" onclick="modifyPassword();">
                                 <svg t="1601967461369" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                      xmlns="http://www.w3.org/2000/svg" p-id="1842" width="20" height="20">
                                     <path d="M486.577954 156.09136h101.688183v203.376366a101.688183 101.688183 0 0 1-101.688183 101.688183h-152.532274a101.688183 101.688183 0 0 1-101.688182-101.688183v-203.376366h101.688182v203.376366h152.532274z m-279.642502-101.688182H610.129096a152.532274 152.532274 0 0 1 108.806356 47.285005l208.460774 217.612711a152.532274 152.532274 0 0 1 42.200596 105.247269v392.516385a152.532274 152.532274 0 0 1-152.532274 152.532274h-610.129096a152.532274 152.532274 0 0 1-152.532274-152.532274v-610.129096a152.532274 152.532274 0 0 1 152.532274-152.532274z m0 101.688182a50.844091 50.844091 0 0 0-50.844092 50.844092v610.129096a50.844091 50.844091 0 0 0 50.844092 50.844092h610.129096a50.844091 50.844091 0 0 0 50.844092-50.844092V424.548163a50.844091 50.844091 0 0 0-14.236346-35.082423L645.71996 171.853029a50.844091 50.844091 0 0 0-35.590864-15.761669z"
                                           fill="#ffffff" p-id="1843"></path>
                                 </svg>
                                 修改密码
-                            </button><!-- Send Button -->
+                            </button>
 
                         </form>
                         <!-- wallet Form end -->
@@ -457,7 +457,7 @@
             $(this).find(".txt h3").stop().animate({paddingTop: "0px"}, 400);
         });
         // 充值按钮点击事件
-        $("#rechargeBtn").click(function () {
+        function recharge () {
             let count = $('#rechargeNum').val();  //获取充值的数额
             $.ajax({
                 type: 'POST',
@@ -468,17 +468,18 @@
                     "count": count
                 }),
                 success: function (data) {
-                    console.log(data);
+                    $('#rechargeModal').modal('hide');
+                    $('#rechargeNum').val(null);
                 },
                 error: function (e) {
                     //这里之后根据错误信息来进行提示
                     console.log(e);
                 }
             });
-        });
+        }
 
         // 修改个人资料点击事件
-        $("#modifyInfoBtn").click(function () {
+        function modifyInfo () {
             let nickname = $('#InputNickname').val();  // 昵称
             let gender = $('#InputGender').val();  // 性别
             let desc = $('#InputDesc').val();  // 个性签名
@@ -502,7 +503,52 @@
                     console.log(e);
                 }
             });
-        });
+        }
+
+        function modifyPassword() {
+            let oldPassword = $('#InputOldPassword');
+            let newPassword = $('#InputNewPassword');
+            let reNewPassword = $('#InputReNewPassword');
+            oldPassword.removeClass('is-invalid');
+            newPassword.removeClass('is-invalid');
+            reNewPassword.removeClass('is-invalid');
+            if (!oldPassword.val()) {
+                oldPassword.addClass('is-invalid');
+                oldPassword.next('div').text('原密码不能为空!');
+                return null;
+            }
+            if (!newPassword.val()) {
+                newPassword.addClass('is-invalid');
+                newPassword.next('div').text('新密码不能为空!');
+                return null;
+            }
+            if (!reNewPassword.val()) {
+                reNewPassword.addClass('is-invalid');
+                reNewPassword.next('div').text('密码不能为空!');
+                return null;
+            }
+            if (reNewPassword.val() !== newPassword.val()) {
+                newPassword.addClass('is-invalid');
+                newPassword.next('div').text('两次密码不一致!');
+                reNewPassword.addClass('is-invalid');
+                reNewPassword.next('div').text('两次密码不一致!');
+                return null;
+            }
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'Users:modify_password' %}',
+                data: {
+                    old_password: oldPassword.val(),
+                    new_password: newPassword.val()
+                },
+                success: function (data) {
+
+                },
+                error: function (e) {
+
+                }
+            });
+        }
     </script>
     <script>
         function preview(obj) {

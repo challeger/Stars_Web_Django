@@ -161,3 +161,25 @@ def modifyUserInfo(request):
         resp['msg'] = str(e)
         return JsonResponse(status=400, data=resp)  # 这写法有点傻逼,后期优化下
     return JsonResponse(resp)
+
+
+@require_POST
+@check_login
+def modifyPassword(request):
+    resp = {
+        'status': 1,
+        'msg': '',
+    }
+    try:
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+        if request.user.check_password(old_password):
+            request.user.set_password(new_password)  # 修改密码
+            request.user.save()  # 保存密码
+            resp['msg'] = '修改密码成功!'
+        else:
+            resp['status'] = 2
+            resp['msg'] = '原密码输入错误!'
+    except Exception as e:
+        print(e)
+    return JsonResponse(resp)
