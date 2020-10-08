@@ -128,24 +128,27 @@ def modifyStars(request):
 @require_POST
 @check_login
 def modifyUserInfo(request):
-    data = json.loads(request.body)
     resp = {
         'status': 1,
         'msg': '',
     }
     try:
-        nickname = data['nickname']
-        gender = data['gender']
-        desc = data['desc']
-
+        nickname = request.POST.get('nickname')
+        gender = request.POST.get('gender')
+        desc = request.POST.get('desc')
+        head_img = request.FILES.get('head-img')
         # 判断是否有空的数据
-        if not all((nickname, gender, desc)):
+        if not all((nickname, gender)):
             raise DataError('数据不能为空!')
 
         user = request.user
         user.nickname = nickname
         user.gender = gender
         user.desc = desc
+
+        if head_img:
+            user.avatar = head_img
+
         user.save()
         resp['status'] = 1
         resp['msg'] = '修改信息成功'

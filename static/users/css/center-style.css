@@ -1699,8 +1699,15 @@ section.padding-60 {
 }
 
 .avatar {
-    width: 100px;
-    border-radius: 5%;
+    border-radius: 20px !important;
+    width: 200px !important;
+    height: 200px !important;
+}
+
+.upload-avatar {
+    border-radius: 20px !important;
+    width: 100px !important;
+    height: 100px !important;
 }
 
 .spacer {

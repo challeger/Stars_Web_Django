@@ -44,7 +44,7 @@
                     <div id="error_text" style="display:none"></div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-danger" type="button">取消</button>
+                    <button class="btn btn-danger" type="button" data-dismiss="modal">取消</button>
                     <button class="btn btn-secondary" id="sendPhoto" type="button">上传</button>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <div class="header-inner d-flex align-items-start flex-column">
-                <a href="#"><img class="rounded mx-auto d-block" src="/media/{{ request.user.avatar }}"
+                <a href="#"><img class="avatar mx-auto d-block img-thumbnail" src="/media/{{ request.user.avatar }}"
                                  alt="{{ request.user }}"/></a>
                 <a href="#" class="site-title mt-3">{{ request.user }}</a>
                 <span class="site-slogan">{{ request.user.desc }}</span>
@@ -326,7 +326,7 @@
                             <div class="row">
                                 <div class="column col-md-12">
                                     <div class="form-group">
-                                        <img id="head-img" class="rounded avatar img-thumbnail" src="/media/{{ request.user.avatar }}"
+                                        <img id="head-img" class="upload-avatar img-thumbnail" src="/media/{{ request.user.avatar }}"
                                              alt="{{ request.user }}"/>
                                         <input type="file" id="input_head" name="file" onchange="preview(this)">上传头像
                                     </div>
@@ -483,18 +483,19 @@
             let gender = $('#InputGender').val();  // 性别
             let desc = $('#InputDesc').val();  // 个性签名
             // 后期加上数据验证
+            let fd = new FormData();
+            fd.append('nickname', nickname);
+            fd.append('gender', gender);
+            fd.append('desc', desc);
+            fd.append('head-img', window.headImg);
             $.ajax({
                 type: 'POST',
                 url: '{% url "Users:modify_userInfo" %}',
-                contentType: 'application/json', //以json格式传数据
-                dataType: 'json',
-                data: JSON.stringify({
-                    "nickname": nickname,
-                    "gender": gender,
-                    "desc": desc,
-                }),
+                data: fd,
+                processData: false,
+                contentType: false,
                 success: function (data) {
-                    console.log(data);
+                    location.reload();  //修改成功,刷新页面
                 },
                 error: function (e) {
                     //这里之后根据错误信息来进行提示
@@ -506,11 +507,16 @@
     <script>
         function preview(obj) {
             let upload_modal = $('#upload-modal');
+            let uploadPreview = $('#uploadPreview');
             let val = obj.value;
             let upLoadType = '.jpg,.gif,.bmp,.png,.jpeg';
             let fileExt = val.substr(val.lastIndexOf('.')).toLowerCase();
             let result = upLoadType.indexOf(fileExt);
             let oFile = obj.files[0];
+            if (val === ''){
+                console.log('没有选择文件');
+                return null;
+            }
             if (obj.files.length === 0 || result < 0){
                 alert('请上传正确格式的文件 jpg|png|bmp|png|jpeg');
                 document.getElementById('uploadPreview').parentElement.style.display = 'none';
@@ -528,7 +534,7 @@
                 document.getElementById('uploadPreview').parentElement.style.display = 'block';
                 document.getElementById('uploadPreview').src = blobURL;
 
-                $('#uploadPreview').cropper({
+                uploadPreview.cropper({
                     aspectRatio: 1,
                     viewMode: 1,
                     ready: function (data) {
@@ -536,7 +542,7 @@
                     }
                 });
 
-                $('#uploadPreview').cropper('reset').cropper('replace', blobURL);
+                uploadPreview.cropper('reset').cropper('replace', blobURL);
             });
 
             $('#sendPhoto').on('click', function () {
@@ -545,20 +551,21 @@
                     height: 150,
                 }).toBlob(function (blob) {
                     document.getElementById('head-img').src = URL.createObjectURL(blob);
-                    window.headImg = blob;
+                    window.headImg = blob;  // 后面上传时会用到
                     upload_modal.modal('hide');
-                    obj.value = blob;
+                    obj.value = null;
                 });
             });
 
             upload_modal.modal('show');
         }
 
-        $('#upload-modal').on('hidden.bs.modal', function (e) {
+        $('#upload-modal').on('hide.bs.modal', function (e) {
             document.getElementById('error_text').style.display = 'none';
             document.getElementById('uploadPreview').src = '';
+            $('#input_head').val(null);  // 将输入框的值设置为空
             $('#uploadPreview').cropper('rest').cropper('replace', '');
             $('#uploadPreview').cropper('destroy');
-        })
+        });
     </script>
 {% endblock %}
