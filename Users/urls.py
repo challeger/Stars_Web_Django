@@ -23,5 +23,6 @@ urlpatterns = [
     path('modify_stars/', views.modifyStars, name='modify_stars'),
     path('modify_userInfo/', views.modifyUserInfo, name='modify_userInfo'),
     path('modify_password/', views.modifyPassword, name='modify_password'),
-    path('modify_password_with_email/', views.modify_password_with_email, name='modify_password_with_email')
+    path('modify_password_with_email/', views.modify_password_with_email, name='modify_password_with_email'),
+    path('user_identity/', views.user_identity, name='user_identity'),
 ]

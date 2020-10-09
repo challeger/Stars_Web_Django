@@ -94,6 +94,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         }, SECRET_KEY, algorithm='HS256')
         return token.decode('utf-8')
 
+    @property
+    def is_identity(self):
+        try:
+            return bool(self.identity)
+        except UserIdentity.DoesNotExist:
+            return False
+
     class Meta:
         verbose_name = verbose_name_plural = '用户'
         db_table = 'model_user'

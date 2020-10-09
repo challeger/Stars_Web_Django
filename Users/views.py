@@ -11,13 +11,21 @@ from django.views import View
 from django.views.decorators.http import require_POST, require_GET
 
 from Stars_Web_Django.settings import EMAIL_FROM
-from Users.models import User, EmailValid, EmailType, Gender
+from Users.models import (
+    User, EmailValid, EmailType,
+    Gender, UserIdentity, Author
+)
 from utils.email import get_random_code, check_email
 from utils.permission import check_login
 
 
 @require_POST
 def login_auth(request):
+    """
+    登录认证
+    :param request:
+    :return:
+    """
     try:
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -35,8 +43,11 @@ def login_auth(request):
 
 @require_POST
 def register(request):
-    data = json.loads(request.body)
-    print(data)
+    """
+    注册接口
+    :param request:
+    :return:
+    """
     try:
         username = request.POST.get('username')  # 用户名
         password = request.POST.get('password')  # 密码
@@ -56,6 +67,11 @@ def register(request):
 
 @require_POST
 def email_register_verify(request):
+    """
+    注册时的发生验证码邮箱接口
+    :param request:
+    :return:
+    """
     data = json.loads(request.body)
     resp = {}
     try:
@@ -124,6 +140,12 @@ def modifyStars(request):
 @require_POST
 @check_login
 def modifyUserInfo(request):
+    """
+    修改用户个人信息接口
+    只能修改 昵称, 性别, 简介, 头像
+    :param request:
+    :return:
+    """
     resp = {
         'status': 1,
         'msg': '',
@@ -162,6 +184,11 @@ def modifyUserInfo(request):
 @require_POST
 @check_login
 def modifyPassword(request):
+    """
+    通过原密码来修改密码的接口
+    :param request:
+    :return:
+    """
     resp = {
         'status': 1,
         'msg': '',
@@ -184,6 +211,11 @@ def modifyPassword(request):
 @require_POST
 @check_login
 def email_modify_password_verify(request):
+    """
+    邮箱修改密码的发送验证码接口
+    :param request:
+    :return:
+    """
     resp = {
         'status': 1,
         'msg': '',
@@ -208,6 +240,11 @@ def email_modify_password_verify(request):
 @require_POST
 @check_login
 def modify_password_with_email(request):
+    """
+    通过邮箱验证来修改密码的接口
+    :param request: 请求
+    :return:
+    """
     resp = {
         'status': 1,
         'msg': ''
@@ -224,3 +261,33 @@ def modify_password_with_email(request):
         resp['status'] = 2
         resp['msg'] = str(e)
     return JsonResponse(resp)
+
+
+@require_POST
+@check_login
+def user_identity(request):
+    """
+    用户实名认证接口
+    :param request:
+    :return:
+    """
+    status = 200
+    resp = {
+        'status': 1,
+        'msg': ''
+    }
+    try:
+        name = request.POST.get('name')
+        id_card = request.POST.get('id_card')
+        if request.user.is_identity:
+            resp['status'] = 2
+            resp['msg'] = '已完成实名认证'
+            status = 400
+        else:
+            UserIdentity.objects.create(user=request.user, name=name, id_card=id_card)
+            resp['msg'] = '实名认证成功!'
+    except Exception as e:
+        resp['status'] = 2
+        resp['msg'] = str(e)
+        status = 400
+    return JsonResponse(status=status, data=resp)

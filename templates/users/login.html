@@ -138,6 +138,10 @@
                 },
                 success: function (resp) {
                     location.href = '{% url "Users:center" %}';
+                    $.message({
+                        type: 'info',
+                        message: '欢迎回来!' + {{ request.user }}
+                    });
                 },
                 error: function (e) {
                     // 后期根据返回的status来进行对应的提示
