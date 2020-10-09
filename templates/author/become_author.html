@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}成为作者{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'author/style.css' %}">
+{% endblock %}
+{% block body %}
+    <div class="main">
+        <div class="container a-container" id="a-container">
+            <form class="form">
+                <h2 class="form_title title">起个笔名吧~</h2>
+                <input id="author-name" class="form__input" type="text" placeholder="笔名">
+                <button class="form__button button">立即注册</button>
+            </form>
+        </div>
+        <div class="switch" id="switch-cnt">
+            <div class="switch__container" id="switch-c1">
+                <h2 class="switch__title title">欢迎加入 !</h2>
+                <p class="switch__description description">请填写您的作者信息~</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

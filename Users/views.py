@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
 from django.db import DataError
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
@@ -291,3 +291,10 @@ def user_identity(request):
         resp['msg'] = str(e)
         status = 400
     return JsonResponse(status=status, data=resp)
+
+
+# 作者平台接口
+@require_GET
+@check_login
+def author_application(request):
+    return render(request, 'author/become_author.html')
