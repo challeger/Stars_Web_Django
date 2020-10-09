@@ -132,17 +132,19 @@
             $.ajax({
                 url: "{% url 'Users:login_auth' %}",
                 type: 'POST',
-                contentType: 'application/json', //以json格式传数据
-                dataType: 'json',
-                data: JSON.stringify({
+                data: {
                     username: formData[0].value,
                     password: formData[1].value
-                }),
+                },
                 success: function (resp) {
-                    console.log(resp);
+                    location.href = '{% url "Users:center" %}';
                 },
                 error: function (e) {
                     // 后期根据返回的status来进行对应的提示
+                    $.message({
+                        type: 'error',
+                        message: e.responseJSON.msg
+                    });
                 },
             })
         }
@@ -153,22 +155,22 @@
             $.ajax({
                 url: "{% url 'Users:register' %}",
                 type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify({
+                data: {
                     username: formData[0].value,
                     nickname: formData[1].value,
                     email: formData[2].value,
                     check: formData[3].value,
                     password: formData[4].value
-                }),
+                },
                 success: function (resp) {
                     console.log(resp);
                 },
                 error: function (e) {
                     // 后期根据返回的status来进行对应的提示
-                    console.log(e.responseJSON.status);
-                    console.log(e.responseJSON.msg);
+                    $.message({
+                        type: 'error',
+                        message: e.responseJSON.msg
+                    });
                 }
             })
         }

@@ -18,20 +18,18 @@ from utils.permission import check_login
 
 @require_POST
 def login_auth(request):
-    data = json.loads(request.body)
     try:
-        user = User.objects.get(Q(username=data['username']) | Q(email=data['username']))
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = User.objects.get(Q(username=username) | Q(email=username))
         # 验证密码
-        if not user.check_password(data['password']):
+        if not user.check_password(password):
             return JsonResponse(status=400, data={'status': 2, 'msg': '用户名或密码错误!'})
-        obj = redirect(reverse('Users:center'))
+        obj = JsonResponse(data={'status': 1, 'msg': '登录成功!'})
         obj.set_cookie('Token', user.token, 60*60*24)
     # 未找到用户
     except User.DoesNotExist:
         return JsonResponse(status=400, data={'status': 2, 'msg': '用户名&邮箱未注册!'})
-    # 缺少参数
-    except KeyError:
-        return JsonResponse(status=400, data={'status': 2, 'msg': '不合法的参数!'})
     return obj
 
 
@@ -40,17 +38,15 @@ def register(request):
     data = json.loads(request.body)
     print(data)
     try:
-        username = data['username']  # 用户名
-        password = data['password']  # 密码
-        nickname = data['nickname']  # 昵称
-        email_item = email = data['email']  # 邮箱
-        check = data['check']  # 验证码
-        check_email(email, EmailType.REGISTER, check)
+        username = request.POST.get('username')  # 用户名
+        password = request.POST.get('password')  # 密码
+        nickname = request.POST.get('nickname')  # 昵称
+        email = request.POST.get('email')  # 邮箱
+        check = request.POST.get('check')  # 验证码
+        email_item = check_email(email, EmailType.REGISTER, check)
         User.objects.create_user(username, password, nickname, email)
         # 创建成功就删除对应的邮件
         email_item.delete()
-    except KeyError:
-        return JsonResponse(status=400, data={'status': 2, 'msg': '不合法的请求数据'})
     except ValueError as e:
         return JsonResponse(status=400, data={'status': 2, 'msg': str(e)})
     except ValidationError as e:

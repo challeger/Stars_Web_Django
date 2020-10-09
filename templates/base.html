@@ -73,9 +73,6 @@
         beforeSend: function(xhr, settings){
             xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
         },
-        complete: function (xhr, status) {
-
-        }
     });
     function sendEmailCodeForPassword() {
         $.ajax({
