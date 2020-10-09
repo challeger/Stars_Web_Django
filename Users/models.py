@@ -99,6 +99,39 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_table = 'model_user'
 
 
+class UserIdentity(models.Model):
+    # 在申请成为作者时,应该先进行实名认证,因为申请实名认证接口得花钱,所以就简单模拟一下.
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='identity')
+    id_card = models.CharField(max_length=18, verbose_name='身份证号')
+    name = models.CharField(max_length=20, verbose_name='真实姓名')
+
+    class Meta:
+        verbose_name = verbose_name_plural = '实名认证'
+        db_table = 'model_user_identity'
+
+
+class Author(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='author')  # 一个用户只能有一个作者马甲
+    # 作者的信息应该与用户信息区分开来
+    author_name = models.CharField(max_length=20, unique=True, null=False, verbose_name='笔名', db_index=True)
+    author_avatar = models.ImageField(upload_to=_user_directory_path, blank=True,
+                                      default='user/avatar/default.jpg', verbose_name='头像')
+    author_desc = models.CharField(max_length=50, blank=True, null=True, default='我们的征途是星辰大海!', verbose_name='简介')
+    date_joined = models.DateTimeField(auto_now_add=True, verbose_name='加入时间')
+
+    @property
+    def level(self):
+        # 作者等级应该根据 当年的书的成绩 来决定,目前还没想好公式,暂定
+        pass
+
+    def __str__(self):
+        return self.author_name
+
+    class Meta:
+        verbose_name = verbose_name_plural = '作者'
+        db_table = 'model_author'
+
+
 class EmailType(models.TextChoices):
     REGISTER = '1', '用户注册'
     PASSWORD = '2', '修改密码'
