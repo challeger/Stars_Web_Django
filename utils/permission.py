@@ -20,3 +20,34 @@ def check_login(func):
             # 没有登录则重定向到登录页面
             return redirect(reverse('Users:login'))
     return wrapper
+
+
+def is_identity(func):
+    """
+    判断用户是否已经通过认证
+    """
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_identity:
+            return func(request, *args, **kwargs)
+        else:
+            return redirect(reverse('Users:center') + '#userIdentity')  # 跳转到认证页面
+    return wrapper
+
+
+def is_author(func):
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_author:
+            return func(request, *args, **kwargs)
+        else:
+            return redirect(reverse('Users:author_application'))
+    return wrapper
+
+
+def is_not_author(func):
+    # 判断是否已经是作者了,是则跳到index页面,
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_author:
+            return func(request, *args, **kwargs)
+        else:
+            return redirect(reverse('Users:author_index'))
+    return wrapper
