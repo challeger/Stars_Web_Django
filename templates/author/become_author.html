@@ -10,7 +10,7 @@
             <form class="form">
                 <h2 class="form_title title">起个笔名吧~</h2>
                 <input id="author-name" class="form__input" type="text" placeholder="笔名">
-                <button class="form__button button">立即注册</button>
+                <button class="form__button button" type="button" onclick="author_btn_click();">成为作者</button>
             </form>
         </div>
         <div class="switch" id="switch-cnt">
@@ -20,4 +20,33 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        function author_btn_click() {
+            let $author_name = $('#author-name');
+            if (!$author_name.val()) {
+                $.message({
+                    'type': 'error',
+                    'message': '笔名不能为空!'
+                });
+                return null;
+            }
+            // 给后端发送ajax请求
+            $.ajax({
+                url: "{% url 'Users:author_application' %}",
+                type: 'POST',
+                data: {
+                    name: $author_name.val()
+                },
+                success: function (resp) {
+                    // 注册成功后跳转到作者平台首页
+                    location.href = "{% url 'Users:author_index' %}";
+                },
+                error: function (e) {
+                    
+                }
+            });
+        }
+    </script>
 {% endblock %}

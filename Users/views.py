@@ -2,11 +2,12 @@ import json
 
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
-from django.db import DataError
+from django.db import DataError, IntegrityError
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.http import require_POST, require_GET
 
@@ -16,7 +17,7 @@ from Users.models import (
     Gender, UserIdentity, Author
 )
 from utils.email import get_random_code, check_email
-from utils.permission import check_login
+from utils.permission import check_login, is_not_author, is_identity, is_author
 
 
 @require_POST
@@ -293,8 +294,27 @@ def user_identity(request):
     return JsonResponse(status=status, data=resp)
 
 
-# 作者平台接口
-@require_GET
+# 作者注册平台接口
+@method_decorator((check_login, is_identity, is_not_author), name='dispatch')
+class AuthorApplicationView(View):
+    template_name = 'author/become_author.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        name = request.POST.get('name')
+        try:
+            if name:
+                Author.objects.create(user=request.user, author_name=name)
+            else:
+                return JsonResponse(status=400, data={'msg': '笔名不能为空!'})
+        except IntegrityError:
+            return JsonResponse(status=400, data={'msg': '笔名已被注册!'})
+        return JsonResponse({'msg': 'ok'})
+
+
 @check_login
-def author_application(request):
-    return render(request, 'author/become_author.html')
+@is_author
+def author_index(request):
+    return render(request, 'author/index.html')

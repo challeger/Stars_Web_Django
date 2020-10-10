@@ -101,6 +101,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         except UserIdentity.DoesNotExist:
             return False
 
+    @property
+    def is_author(self):
+        try:
+            return bool(self.author)
+        except Author.DoesNotExist:
+            return False
+
     class Meta:
         verbose_name = verbose_name_plural = '用户'
         db_table = 'model_user'
@@ -120,7 +127,7 @@ class UserIdentity(models.Model):
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='author')  # 一个用户只能有一个作者马甲
     # 作者的信息应该与用户信息区分开来
-    author_name = models.CharField(max_length=20, unique=True, null=False, verbose_name='笔名', db_index=True)
+    author_name = models.CharField(max_length=20, unique=True, verbose_name='笔名', db_index=True)
     author_avatar = models.ImageField(upload_to=_user_directory_path, blank=True,
                                       default='user/avatar/default.jpg', verbose_name='头像')
     author_desc = models.CharField(max_length=50, blank=True, null=True, default='我们的征途是星辰大海!', verbose_name='简介')
